@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.AwGetWebsiteNewsMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.AwGetWebsiteNews">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="server_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="web_site_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="to_obtain_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, server_id, web_site_name, to_obtain_time
+  </sql>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from aw_get_website_news
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAwGetWebsiteNews" parameterType="com.wyfx.aw.entity.AwGetWebsiteNews" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from aw_get_website_news
+   <where>
+     <if test="id != null">
+       id  =#{id,jdbcType=INTEGER}
+     </if>
+     <if test="serverId != null">
+      and server_id  = #{serverId,jdbcType=INTEGER}
+     </if>
+     <if test="webSiteName != null">
+      and  web_site_name  = #{webSiteName,jdbcType=VARCHAR}
+     </if>
+     <if test="toObtainTime != null">
+      and to_obtain_time  = #{toObtainTime,jdbcType=TIMESTAMP}
+     </if>
+   </where>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from aw_get_website_news
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.AwGetWebsiteNews">
+    insert into aw_get_website_news (id, server_id, web_site_name, 
+      to_obtain_time)
+    values (#{id,jdbcType=INTEGER}, #{serverId,jdbcType=INTEGER}, #{webSiteName,jdbcType=VARCHAR}, 
+      #{toObtainTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.AwGetWebsiteNews">
+    insert into aw_get_website_news
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverId != null">
+        server_id,
+      </if>
+      <if test="webSiteName != null">
+        web_site_name,
+      </if>
+      <if test="toObtainTime != null">
+        to_obtain_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="serverId != null">
+        #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="webSiteName != null">
+        #{webSiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="toObtainTime != null">
+        #{toObtainTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.AwGetWebsiteNews">
+    update aw_get_website_news
+    <set>
+      <if test="serverId != null">
+        server_id = #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="webSiteName != null">
+        web_site_name = #{webSiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="toObtainTime != null">
+        to_obtain_time = #{toObtainTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.AwGetWebsiteNews">
+    update aw_get_website_news
+    set server_id = #{serverId,jdbcType=INTEGER},
+      web_site_name = #{webSiteName,jdbcType=VARCHAR},
+      to_obtain_time = #{toObtainTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

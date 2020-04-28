@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.ServerInfoMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.ServerInfo">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="serverId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="local" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="conn_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="is_delete" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="is_valid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="host" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="port" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.wyfx.aw.entity.ServerInfo">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="serverId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="local" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="conn_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="is_delete" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="is_valid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="host" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="port" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="note" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+  <resultMap id="serverListMap" type="com.wyfx.aw.entity.vo.ServerListVo">
+    <id property="id" column="id" jdbcType="BIGINT"/>
+    <result column="serverId" property="serverId" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+    <result column="name" property="name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    <result column="local" property="local" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    <result column="conn_status" property="connStatus" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+    <result column="host" property="host" javaType="java.lang.String" jdbcType="VARCHAR"/>
+
+    <result column="running_state" property="runningState" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+    <result column="currentSupport" property="currentsupport" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    <result column="system" property="system" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    <result column="server_type" property="serverType" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+    <result column="attackManagerStatus" property="attackManagerStatus" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, serverId, name, local, conn_status, is_delete, is_valid, host, port
+  </sql>
+  <sql id="Blob_Column_List">
+    note
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from aw_server_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectNodeServerByserverId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    id, server_id, is_tor, is_i2p, is_zeronet, currentSupport
+    from aw_node_server
+    where server_id = #{serverId,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="selectByIsDelete" resultMap="serverListMap" useCache="true">
+    select s.id,s.serverId,s.`name`,s.type,s.`local`,s.conn_status,s.`host`,n.currentSupport,n.running_state,a.system,w.server_type,am.running_state as attackManagerStatus
+    from aw_server_info s,aw_node_server n,aw_web_server w,aw_attack_manager am,aw_server_attribute a
+    where s.id=n.server_id and s.id=w.server_id and s.id=am.server_id and s.id=a.server_id and is_delete =#{isDelete,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByHostAndPort" resultType="com.wyfx.aw.entity.ServerInfo">
+      select <include refid="Base_Column_List" /> from aw_server_info where host=#{host,jdbcType=VARCHAR} and port=#{port,jdbcType=INTEGER}
+  </select>
+
+
+ <select id="selectByPrimaryKeyServerId" resultType="com.wyfx.aw.entity.ServerInfo">
+      select <include refid="Base_Column_List" /> from aw_server_info where serverId=#{serverId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectMaxId" resultType="long">
+      select max(id) from aw_server_info
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from aw_server_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.ServerInfo">
+    insert into aw_server_info (id, serverId, name,type,
+      local, conn_status, is_delete, 
+      is_valid, host, port, 
+      note)
+    values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},#{type,jdbcType=INTEGER},
+      #{local,jdbcType=VARCHAR}, #{connStatus,jdbcType=INTEGER}, #{isDelete,jdbcType=INTEGER}, 
+      #{isValid,jdbcType=INTEGER}, #{host,jdbcType=VARCHAR}, #{port,jdbcType=INTEGER}, 
+      #{note,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.ServerInfo">
+    insert into aw_server_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverId != null">
+        serverId,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+       <if test="type != null">
+         type,
+      </if>
+      <if test="local != null">
+        local,
+      </if>
+      <if test="connStatus != null">
+        conn_status,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="isValid != null">
+        is_valid,
+      </if>
+      <if test="host != null">
+        host,
+      </if>
+      <if test="port != null">
+        port,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serverId != null">
+        #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+       <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="local != null">
+        #{local,jdbcType=VARCHAR},
+      </if>
+      <if test="connStatus != null">
+        #{connStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null">
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="host != null">
+        #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.ServerInfo">
+    update aw_server_info
+    <set>
+      <if test="serverId != null">
+        serverId = #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+       <if test="type != null">
+        name = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="local != null">
+        local = #{local,jdbcType=VARCHAR},
+      </if>
+      <if test="connStatus != null">
+        conn_status = #{connStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null">
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="host != null">
+        host = #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        port = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wyfx.aw.entity.ServerInfo">
+    update aw_server_info
+    set serverId = #{serverId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      local = #{local,jdbcType=VARCHAR},
+      conn_status = #{connStatus,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      host = #{host,jdbcType=VARCHAR},
+      port = #{port,jdbcType=INTEGER},
+      note = #{note,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.ServerInfo">
+    update aw_server_info
+    set serverId = #{serverId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      local = #{local,jdbcType=VARCHAR},
+      conn_status = #{connStatus,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      host = #{host,jdbcType=VARCHAR},
+      port = #{port,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateById">
+    update aw_server_info
+    set is_delete = #{isDelete,jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

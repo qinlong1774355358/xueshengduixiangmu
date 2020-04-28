@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.AttackManagerMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.AttackManager">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="server_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="attack_way" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="running_state" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="min_addr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="max_addr" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, server_id, attack_way, running_state, min_addr, max_addr
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from aw_attack_manager
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByserverId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from aw_attack_manager
+    where server_id = #{serverId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from aw_attack_manager
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.AttackManager" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_attack_manager (id, server_id, attack_way, 
+      running_state, min_addr, max_addr
+      )
+    values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT}, #{attackWay,jdbcType=INTEGER},
+      #{runningState,jdbcType=INTEGER}, #{minAddr,jdbcType=VARCHAR}, #{maxAddr,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.AttackManager" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_attack_manager
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverId != null">
+        server_id,
+      </if>
+      <if test="attackWay != null">
+        attack_way,
+      </if>
+      <if test="runningState != null">
+        running_state,
+      </if>
+      <if test="minAddr != null">
+        min_addr,
+      </if>
+      <if test="maxAddr != null">
+        max_addr,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serverId != null">
+        #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="attackWay != null">
+        #{attackWay,jdbcType=INTEGER},
+      </if>
+      <if test="runningState != null">
+        #{runningState,jdbcType=INTEGER},
+      </if>
+      <if test="minAddr != null">
+        #{minAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="maxAddr != null">
+        #{maxAddr,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.AttackManager">
+    update aw_attack_manager
+    <set>
+      <if test="serverId != null">
+        server_id = #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="attackWay != null">
+        attack_way = #{attackWay,jdbcType=INTEGER},
+      </if>
+      <if test="runningState != null">
+        running_state = #{runningState,jdbcType=INTEGER},
+      </if>
+      <if test="minAddr != null">
+        min_addr = #{minAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="maxAddr != null">
+        max_addr = #{maxAddr,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.AttackManager">
+    update aw_attack_manager
+    set server_id = #{serverId,jdbcType=BIGINT},
+      attack_way = #{attackWay,jdbcType=INTEGER},
+      running_state = #{runningState,jdbcType=INTEGER},
+      min_addr = #{minAddr,jdbcType=VARCHAR},
+      max_addr = #{maxAddr,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

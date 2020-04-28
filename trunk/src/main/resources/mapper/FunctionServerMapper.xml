@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.FunctionServerMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.FunctionServer">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="server_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="server_type" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="deploy_state" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="running_state" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="install_dir" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, server_id, server_type, deploy_state, running_state, install_dir
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from aw_function_server
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByserverId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from aw_function_server
+    where server_id = #{serverId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from aw_function_server
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.FunctionServer" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_function_server (id, server_id, server_type, 
+      deploy_state, running_state, install_dir
+      )
+    values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT}, #{serverType,jdbcType=INTEGER},
+      #{deployState,jdbcType=INTEGER}, #{runningState,jdbcType=INTEGER}, #{installDir,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.FunctionServer" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_function_server
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverId != null">
+        server_id,
+      </if>
+      <if test="serverType != null">
+        server_type,
+      </if>
+      <if test="deployState != null">
+        deploy_state,
+      </if>
+      <if test="runningState != null">
+        running_state,
+      </if>
+      <if test="installDir != null">
+        install_dir,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serverId != null">
+        #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="serverType != null">
+        #{serverType,jdbcType=INTEGER},
+      </if>
+      <if test="deployState != null">
+        #{deployState,jdbcType=INTEGER},
+      </if>
+      <if test="runningState != null">
+        #{runningState,jdbcType=INTEGER},
+      </if>
+      <if test="installDir != null">
+        #{installDir,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.FunctionServer">
+    update aw_function_server
+    <set>
+      <if test="serverId != null">
+        server_id = #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="serverType != null">
+        server_type = #{serverType,jdbcType=INTEGER},
+      </if>
+      <if test="deployState != null">
+        deploy_state = #{deployState,jdbcType=INTEGER},
+      </if>
+      <if test="runningState != null">
+        running_state = #{runningState,jdbcType=INTEGER},
+      </if>
+      <if test="installDir != null">
+        install_dir = #{installDir,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.FunctionServer">
+    update aw_function_server
+    set server_id = #{serverId,jdbcType=BIGINT},
+      server_type = #{serverType,jdbcType=INTEGER},
+      deploy_state = #{deployState,jdbcType=INTEGER},
+      running_state = #{runningState,jdbcType=INTEGER},
+      install_dir = #{installDir,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

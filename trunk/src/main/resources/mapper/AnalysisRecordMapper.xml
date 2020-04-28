@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.AnalysisRecordMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.AnalysisRecord">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="server_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="dir" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="duration" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="srcIP" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="srcIPCC" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="srcIPWho" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="srcPort" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dstIP" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dstIPCC" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dstIPWho" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dstPort" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="l4Proto" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="timeFirst" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="timeLast" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, server_id,status, dir, duration, srcIP, srcIPCC, srcIPWho, srcPort, dstIP, dstIPCC,
+    dstIPWho, dstPort, l4Proto, timeFirst, timeLast
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from analysis_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAnalysisRecord" parameterType="com.wyfx.aw.entity.AnalysisRecord" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from analysis_record
+    <where>
+      <if test="id != null">
+        id=#{id,jdbcType=INTEGER}
+      </if>
+      <if test="serverId != null">
+       and server_id=#{serverId,jdbcType=INTEGER}
+      </if>
+       <if test="status != null">
+       and status=#{status,jdbcType=INTEGER}
+      </if>
+      <if test="dir != null">
+        and dir = #{dir,jdbcType=VARCHAR}
+      </if>
+       <if test="trafficType != null">
+        and trafficType = #{trafficType,jdbcType=VARCHAR}
+      </if>
+      <if test="duration != null">
+       and duration = #{duration,jdbcType=TIMESTAMP}
+      </if>
+      <if test="srcip != null">
+        and srcIP = #{srcip,jdbcType=VARCHAR}
+      </if>
+      <if test="srcipcc != null">
+        and srcIPCC= #{srcipcc,jdbcType=VARCHAR}
+      </if>
+      <if test="srcipwho != null">
+       and srcIPWho=#{srcipwho,jdbcType=VARCHAR}
+      </if>
+      <if test="srcport != null">
+       and srcPort= #{srcport,jdbcType=VARCHAR}
+      </if>
+      <if test="dstip != null">
+       and dstIP=#{dstip,jdbcType=VARCHAR}
+      </if>
+      <if test="dstipcc != null">
+        and dstIPCC= #{dstipcc,jdbcType=VARCHAR}
+      </if>
+      <if test="dstipwho != null">
+        and dstIPWho= #{dstipwho,jdbcType=VARCHAR}
+      </if>
+      <if test="dstport != null">
+       and dstPort= #{dstport,jdbcType=VARCHAR}
+      </if>
+      <if test="l4proto != null">
+       and l4Proto=#{l4proto,jdbcType=VARCHAR}
+      </if>
+      <if test="timefirst != null">
+       and timeFirst= #{timefirst,jdbcType=TIMESTAMP}
+      </if>
+      <if test="timelast != null">
+       and timeLast= #{timelast,jdbcType=TIMESTAMP}
+      </if>
+
+    </where>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from analysis_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.AnalysisRecord">
+    insert into analysis_record (id, server_id,status, dir,
+      duration, srcIP, srcIPCC, 
+      srcIPWho, srcPort, dstIP, 
+      dstIPCC, dstIPWho, dstPort, 
+      l4Proto, timeFirst, timeLast
+      )
+    values (#{id,jdbcType=INTEGER}, #{serverId,jdbcType=INTEGER},#{status,jdbcType=INTEGER}, #{dir,jdbcType=VARCHAR},
+      #{duration,jdbcType=TIMESTAMP}, #{srcip,jdbcType=VARCHAR}, #{srcipcc,jdbcType=VARCHAR},
+      #{srcipwho,jdbcType=VARCHAR}, #{srcport,jdbcType=VARCHAR}, #{dstip,jdbcType=VARCHAR}, 
+      #{dstipcc,jdbcType=VARCHAR}, #{dstipwho,jdbcType=VARCHAR}, #{dstport,jdbcType=VARCHAR}, 
+      #{l4proto,jdbcType=VARCHAR}, #{timefirst,jdbcType=TIMESTAMP}, #{timelast,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.AnalysisRecord">
+    insert into analysis_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverId != null">
+        server_id,
+      </if>
+       <if test="status != null">
+         status,
+      </if>
+      <if test="dir != null">
+        dir,
+      </if>
+       <if test="trafficType != null">
+        trafficType,
+      </if>
+      <if test="duration != null">
+        duration,
+      </if>
+      <if test="srcip != null">
+        srcIP,
+      </if>
+      <if test="srcipcc != null">
+        srcIPCC,
+      </if>
+      <if test="srcipwho != null">
+        srcIPWho,
+      </if>
+      <if test="srcport != null">
+        srcPort,
+      </if>
+      <if test="dstip != null">
+        dstIP,
+      </if>
+      <if test="dstipcc != null">
+        dstIPCC,
+      </if>
+      <if test="dstipwho != null">
+        dstIPWho,
+      </if>
+      <if test="dstport != null">
+        dstPort,
+      </if>
+      <if test="l4proto != null">
+        l4Proto,
+      </if>
+      <if test="timefirst != null">
+        timeFirst,
+      </if>
+      <if test="timelast != null">
+        timeLast,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="serverId != null">
+        #{serverId,jdbcType=INTEGER},
+      </if>
+       <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="dir != null">
+        #{dir,jdbcType=VARCHAR},
+      </if>
+       <if test="trafficType != null">
+        #{trafficType,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null">
+        #{duration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="srcip != null">
+        #{srcip,jdbcType=VARCHAR},
+      </if>
+      <if test="srcipcc != null">
+        #{srcipcc,jdbcType=VARCHAR},
+      </if>
+      <if test="srcipwho != null">
+        #{srcipwho,jdbcType=VARCHAR},
+      </if>
+      <if test="srcport != null">
+        #{srcport,jdbcType=VARCHAR},
+      </if>
+      <if test="dstip != null">
+        #{dstip,jdbcType=VARCHAR},
+      </if>
+      <if test="dstipcc != null">
+        #{dstipcc,jdbcType=VARCHAR},
+      </if>
+      <if test="dstipwho != null">
+        #{dstipwho,jdbcType=VARCHAR},
+      </if>
+      <if test="dstport != null">
+        #{dstport,jdbcType=VARCHAR},
+      </if>
+      <if test="l4proto != null">
+        #{l4proto,jdbcType=VARCHAR},
+      </if>
+      <if test="timefirst != null">
+        #{timefirst,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timelast != null">
+        #{timelast,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.AnalysisRecord">
+    update analysis_record
+    <set>
+      <if test="serverId != null">
+        server_id = #{serverId,jdbcType=INTEGER},
+      </if>
+        <if test="status != null">
+          status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="trafficType != null">
+        trafficType = #{trafficType,jdbcType=VARCHAR},
+      </if>
+      <if test="dir != null">
+        dir = #{dir,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null">
+        duration = #{duration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="srcip != null">
+        srcIP = #{srcip,jdbcType=VARCHAR},
+      </if>
+      <if test="srcipcc != null">
+        srcIPCC = #{srcipcc,jdbcType=VARCHAR},
+      </if>
+      <if test="srcipwho != null">
+        srcIPWho = #{srcipwho,jdbcType=VARCHAR},
+      </if>
+      <if test="srcport != null">
+        srcPort = #{srcport,jdbcType=VARCHAR},
+      </if>
+      <if test="dstip != null">
+        dstIP = #{dstip,jdbcType=VARCHAR},
+      </if>
+      <if test="dstipcc != null">
+        dstIPCC = #{dstipcc,jdbcType=VARCHAR},
+      </if>
+      <if test="dstipwho != null">
+        dstIPWho = #{dstipwho,jdbcType=VARCHAR},
+      </if>
+      <if test="dstport != null">
+        dstPort = #{dstport,jdbcType=VARCHAR},
+      </if>
+      <if test="l4proto != null">
+        l4Proto = #{l4proto,jdbcType=VARCHAR},
+      </if>
+      <if test="timefirst != null">
+        timeFirst = #{timefirst,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timelast != null">
+        timeLast = #{timelast,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.AnalysisRecord">
+    update analysis_record
+    set server_id = #{serverId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      trafficType = #{trafficType,jdbcType=VARCHAR},
+      dir = #{dir,jdbcType=VARCHAR},
+      duration = #{duration,jdbcType=TIMESTAMP},
+      srcIP = #{srcip,jdbcType=VARCHAR},
+      srcIPCC = #{srcipcc,jdbcType=VARCHAR},
+      srcIPWho = #{srcipwho,jdbcType=VARCHAR},
+      srcPort = #{srcport,jdbcType=VARCHAR},
+      dstIP = #{dstip,jdbcType=VARCHAR},
+      dstIPCC = #{dstipcc,jdbcType=VARCHAR},
+      dstIPWho = #{dstipwho,jdbcType=VARCHAR},
+      dstPort = #{dstport,jdbcType=VARCHAR},
+      l4Proto = #{l4proto,jdbcType=VARCHAR},
+      timeFirst = #{timefirst,jdbcType=TIMESTAMP},
+      timeLast = #{timelast,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
