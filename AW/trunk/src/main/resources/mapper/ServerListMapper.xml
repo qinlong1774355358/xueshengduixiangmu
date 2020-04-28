@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.ServerListMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.ServerList">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="server_addr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="port" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="is_valid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, server_addr, port, is_valid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from aw_server_list
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByIpAndPort" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from aw_server_list
+    where server_addr = #{ip,jdbcType=VARCHAR} and port=#{port,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from aw_server_list
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.ServerList" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_server_list (id, server_addr, port, 
+      is_valid)
+    values (#{id,jdbcType=BIGINT}, #{serverAddr,jdbcType=VARCHAR}, #{port,jdbcType=INTEGER}, 
+      #{isValid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.ServerList" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_server_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverAddr != null">
+        server_addr,
+      </if>
+      <if test="port != null">
+        port,
+      </if>
+      <if test="isValid != null">
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serverAddr != null">
+        #{serverAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null">
+        #{isValid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.ServerList">
+    update aw_server_list
+    <set>
+      <if test="serverAddr != null">
+        server_addr = #{serverAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        port = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null">
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.ServerList">
+    update aw_server_list
+    set server_addr = #{serverAddr,jdbcType=VARCHAR},
+      port = #{port,jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

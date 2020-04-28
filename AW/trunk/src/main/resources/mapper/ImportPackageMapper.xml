@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.ImportPackageMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.ImportPackage">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="package_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="import_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="analysis_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="file_size" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="complete_size" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="note" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, package_name, import_time, analysis_time, file_size, complete_size, note
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from import_package
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectImportPackage" parameterType="com.wyfx.aw.entity.ImportPackage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from import_package
+    <where>
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="packageName != null">
+       and package_name=#{packageName,jdbcType=VARCHAR}
+      </if>
+      <if test="importTime != null">
+        and import_time=#{importTime,jdbcType=TIMESTAMP}
+      </if>
+       <if test="analysisTime != null">
+        and analysis_time=#{analysisTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="fileSize != null">
+       and file_size=#{fileSize,jdbcType=INTEGER}
+      </if>
+      <if test="completeSize != null">
+       and complete_size=#{completeSize,jdbcType=INTEGER}
+      </if>
+      <if test="note != null">
+       and note=#{note,jdbcType=VARCHAR}
+      </if>
+    </where>
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from import_package
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.ImportPackage">
+    insert into import_package (id, package_name, import_time, import_time,
+      file_size,complete_size, note)
+    values (#{id,jdbcType=INTEGER}, #{packageName,jdbcType=VARCHAR}, #{importTime,jdbcType=TIMESTAMP}, #{analysisTime,jdbcType=TIMESTAMP},
+      #{fileSize,jdbcType=INTEGER},#{completeSize,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.ImportPackage">
+    insert into import_package
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="packageName != null">
+        package_name,
+      </if>
+      <if test="importTime != null">
+        import_time,
+      </if>
+       <if test="analysisTime != null">
+         analysis_time,
+      </if>
+      <if test="fileSize != null">
+        file_size,
+      </if>
+      <if test="completeSize != null">
+        complete_size,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="packageName != null">
+        #{packageName,jdbcType=VARCHAR},
+      </if>
+      <if test="importTime != null">
+        #{importTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="analysisTime != null">
+        #{analysisTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fileSize != null">
+        #{fileSize,jdbcType=INTEGER},
+      </if>
+       <if test="completeSize != null">
+        #{completeSize,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.ImportPackage">
+    update import_package
+    <set>
+      <if test="packageName != null">
+        package_name = #{packageName,jdbcType=VARCHAR},
+      </if>
+      <if test="importTime != null">
+        import_time = #{importTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="analysisTime != null">
+         analysis_time = #{analysis_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fileSize != null">
+        file_size = #{fileSize,jdbcType=INTEGER},
+      </if>
+       <if test="completeSize != null">
+         complete_size = #{completeSize,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.ImportPackage">
+    update import_package
+    set package_name = #{packageName,jdbcType=VARCHAR},
+      import_time = #{importTime,jdbcType=TIMESTAMP},
+      analysis_time = #{analysisTime,jdbcType=TIMESTAMP},
+      file_size = #{fileSize,jdbcType=INTEGER},
+      complete_size = #{completeSize,jdbcType=INTEGER},
+      note = #{note,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.AwServerAttributeMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.AwServerAttribute">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="server_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="cpu" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="hard_disk" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ram" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ip4_addr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ip6_addr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="system" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, server_id, cpu, hard_disk, ram, ip4_addr, ip6_addr, system
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from aw_server_attribute
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAwServerAttribute" parameterType="com.wyfx.aw.entity.AwServerAttribute" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from aw_server_attribute
+      <where>
+        <if test="id != null">
+          id=#{id,jdbcType=BIGINT}
+        </if>
+        <if test="serverId != null">
+          and server_id=#{serverId,jdbcType=BIGINT}
+        </if>
+        <if test="cpu != null">
+          and cpu=#{cpu,jdbcType=VARCHAR}
+        </if>
+        <if test="hardDisk != null">
+          and hard_disk=#{hardDisk, jdbcType=VARCHAR}
+        </if>
+        <if test="ram != null">
+          and ram=#{ram ,jdbcType=VARCHAR}
+        </if>
+        <if test="ip4Addr != null">
+          and ip4_addr=#{ip4Addr, jdbcType=VARCHAR}
+        </if>
+        <if test="ip6Addr != null">
+          and ip6_addr=#{ip6Addr, jdbcType=VARCHAR}
+        </if>
+        <if test="system != null">
+          and system= #{system, jdbcType=VARCHAR}
+        </if>
+      </where>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from aw_server_attribute
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.AwServerAttribute">
+    insert into aw_server_attribute (id, server_id, cpu, 
+      hard_disk, ram, ip4_addr, 
+      ip6_addr, system)
+    values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT}, #{cpu,jdbcType=VARCHAR}, 
+      #{hardDisk,jdbcType=VARCHAR}, #{ram,jdbcType=VARCHAR}, #{ip4Addr,jdbcType=VARCHAR}, 
+      #{ip6Addr,jdbcType=VARCHAR}, #{system,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.AwServerAttribute">
+    insert into aw_server_attribute
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverId != null">
+        server_id,
+      </if>
+      <if test="cpu != null">
+        cpu,
+      </if>
+      <if test="hardDisk != null">
+        hard_disk,
+      </if>
+      <if test="ram != null">
+        ram,
+      </if>
+      <if test="ip4Addr != null">
+        ip4_addr,
+      </if>
+      <if test="ip6Addr != null">
+        ip6_addr,
+      </if>
+      <if test="system != null">
+        system,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serverId != null">
+        #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="cpu != null">
+        #{cpu,jdbcType=VARCHAR},
+      </if>
+      <if test="hardDisk != null">
+        #{hardDisk,jdbcType=VARCHAR},
+      </if>
+      <if test="ram != null">
+        #{ram,jdbcType=VARCHAR},
+      </if>
+      <if test="ip4Addr != null">
+        #{ip4Addr,jdbcType=VARCHAR},
+      </if>
+      <if test="ip6Addr != null">
+        #{ip6Addr,jdbcType=VARCHAR},
+      </if>
+      <if test="system != null">
+        #{system,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.AwServerAttribute">
+    update aw_server_attribute
+    <set>
+      <if test="serverId != null">
+        server_id = #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="cpu != null">
+        cpu = #{cpu,jdbcType=VARCHAR},
+      </if>
+      <if test="hardDisk != null">
+        hard_disk = #{hardDisk,jdbcType=VARCHAR},
+      </if>
+      <if test="ram != null">
+        ram = #{ram,jdbcType=VARCHAR},
+      </if>
+      <if test="ip4Addr != null">
+        ip4_addr = #{ip4Addr,jdbcType=VARCHAR},
+      </if>
+      <if test="ip6Addr != null">
+        ip6_addr = #{ip6Addr,jdbcType=VARCHAR},
+      </if>
+      <if test="system != null">
+        system = #{system,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where server_id = #{serverId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.AwServerAttribute">
+    update aw_server_attribute
+    set server_id = #{serverId,jdbcType=BIGINT},
+      cpu = #{cpu,jdbcType=VARCHAR},
+      hard_disk = #{hardDisk,jdbcType=VARCHAR},
+      ram = #{ram,jdbcType=VARCHAR},
+      ip4_addr = #{ip4Addr,jdbcType=VARCHAR},
+      ip6_addr = #{ip6Addr,jdbcType=VARCHAR},
+      system = #{system,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

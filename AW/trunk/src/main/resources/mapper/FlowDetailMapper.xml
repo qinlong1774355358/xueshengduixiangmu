@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.FlowDetailMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.FlowDetail">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="serverId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="node_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="exit_ip_addr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="input_flow" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="out_flow" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="total_flow" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="note" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="file_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="file_size" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="offset" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="path" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.wyfx.aw.entity.FlowDetail">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="serverId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="node_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="exit_ip_addr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="input_flow" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="out_flow" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="total_flow" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="note" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="file_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="file_size" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="offset" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="path" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id,serverId,status, node_id, exit_ip_addr, input_flow, out_flow, total_flow, note, file_name, file_size,
+    offset
+  </sql>
+  <sql id="Blob_Column_List">
+    path
+  </sql>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from aw_flow_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <!--多条id查询-->
+  <select id="selectFlowDetailById" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from aw_flow_detail
+    where id in
+    <foreach item="idList" index="index" collection="ids"
+             open="(" separator="," close=")">
+      #{idList}
+    </foreach>
+  </select>
+
+  <select id="selectFlowDetail" parameterType="com.wyfx.aw.entity.FlowDetail" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from aw_flow_detail
+    <where>
+      <if test="id != null">
+        id=#{id,jdbcType=BIGINT}
+      </if>
+      <if test="serverId != null">
+        and serverId=#{serverId,jdbcType=INTEGER}
+      </if>
+       <if test="status != null">
+        and status=#{status,jdbcType=INTEGER}
+      </if>
+      <if test="nodeId != null">
+        and node_id=#{nodeId,jdbcType=BIGINT}
+      </if>
+      <if test="exitIpAddr != null">
+        and exit_ip_addr=#{exitIpAddr,jdbcType=VARCHAR}
+      </if>
+      <if test="inputFlow != null">
+        and input_flow=#{inputFlow,jdbcType=VARCHAR}
+      </if>
+      <if test="outFlow != null">
+        and out_flow=#{outFlow,jdbcType=VARCHAR}
+      </if>
+      <if test="totalFlow != null">
+        and total_flow=#{totalFlow,jdbcType=VARCHAR}
+      </if>
+      <if test="note != null">
+        and note=#{note,jdbcType=VARCHAR}
+      </if>
+      <if test="fileName != null">
+        and file_name=#{fileName,jdbcType=VARCHAR}
+      </if>
+      <if test="fileSize != null">
+        and file_size=#{fileSize,jdbcType=BIGINT}
+      </if>
+      <if test="offset != null">
+        and offset=#{offset,jdbcType=BIGINT}
+      </if>
+      <if test="path != null">
+        and path=#{path,jdbcType=LONGVARCHAR}
+      </if>
+    </where>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from aw_flow_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.FlowDetail" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_flow_detail (id, node_id, serverId, status, exit_ip_addr,
+      input_flow, out_flow, total_flow, 
+      note, file_name, file_size, 
+      offset, path)
+    values (#{id,jdbcType=BIGINT}, #{nodeId,jdbcType=BIGINT}, #{exitIpAddr,jdbcType=VARCHAR}, 
+      #{inputFlow,jdbcType=VARCHAR}, #{outFlow,jdbcType=VARCHAR}, #{totalFlow,jdbcType=VARCHAR}, 
+      #{note,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileSize,jdbcType=BIGINT}, 
+      #{offset,jdbcType=BIGINT}, #{path,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.FlowDetail" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_flow_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverId != null">
+        serverId,
+      </if>
+       <if test="status != null">
+         status,
+      </if>
+       <if test="nodeId != null">
+        node_id,
+      </if>
+      <if test="exitIpAddr != null">
+        exit_ip_addr,
+      </if>
+      <if test="inputFlow != null">
+        input_flow,
+      </if>
+      <if test="outFlow != null">
+        out_flow,
+      </if>
+      <if test="totalFlow != null">
+        total_flow,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+      <if test="fileName != null">
+        file_name,
+      </if>
+      <if test="fileSize != null">
+        file_size,
+      </if>
+      <if test="offset != null">
+        offset,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="nodeId != null">
+        #{nodeId,jdbcType=BIGINT},
+      </if>
+       <if test="serverId != null">
+        #{serverId,jdbcType=INTEGER},
+      </if>
+       <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="exitIpAddr != null">
+        #{exitIpAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="inputFlow != null">
+        #{inputFlow,jdbcType=VARCHAR},
+      </if>
+      <if test="outFlow != null">
+        #{outFlow,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFlow != null">
+        #{totalFlow,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null">
+        #{fileSize,jdbcType=BIGINT},
+      </if>
+      <if test="offset != null">
+        #{offset,jdbcType=BIGINT},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.FlowDetail">
+    update aw_flow_detail
+    <set>
+      <if test="serverId != null">
+        serverId = #{serverId,jdbcType=INTEGER},
+      </if>
+       <if test="status != null">
+         status = #{status,jdbcType=INTEGER},
+      </if>
+       <if test="nodeId != null">
+        node_id = #{nodeId,jdbcType=BIGINT},
+      </if>
+      <if test="exitIpAddr != null">
+        exit_ip_addr = #{exitIpAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="inputFlow != null">
+        input_flow = #{inputFlow,jdbcType=VARCHAR},
+      </if>
+      <if test="outFlow != null">
+        out_flow = #{outFlow,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFlow != null">
+        total_flow = #{totalFlow,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null">
+        file_size = #{fileSize,jdbcType=BIGINT},
+      </if>
+      <if test="offset != null">
+        offset = #{offset,jdbcType=BIGINT},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wyfx.aw.entity.FlowDetail">
+    update aw_flow_detail
+    set node_id = #{nodeId,jdbcType=BIGINT},
+      serverId = #{serverId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      exit_ip_addr = #{exitIpAddr,jdbcType=VARCHAR},
+      input_flow = #{inputFlow,jdbcType=VARCHAR},
+      out_flow = #{outFlow,jdbcType=VARCHAR},
+      total_flow = #{totalFlow,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      file_size = #{fileSize,jdbcType=BIGINT},
+      offset = #{offset,jdbcType=BIGINT},
+      path = #{path,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.FlowDetail">
+    update aw_flow_detail
+    set node_id = #{nodeId,jdbcType=BIGINT},
+      serverId = #{serverId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      exit_ip_addr = #{exitIpAddr,jdbcType=VARCHAR},
+      input_flow = #{inputFlow,jdbcType=VARCHAR},
+      out_flow = #{outFlow,jdbcType=VARCHAR},
+      total_flow = #{totalFlow,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      file_size = #{fileSize,jdbcType=BIGINT},
+      offset = #{offset,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

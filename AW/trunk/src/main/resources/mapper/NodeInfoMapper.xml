@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.NodeInfoMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.NodeInfo">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="server_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="node_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ip_addr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="node_source" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="reconn_count" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="running_state" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="join_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="control_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, server_id, node_id, ip_addr, node_source, reconn_count, running_state, join_status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from aw_node_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAllByserverId" parameterType="java.lang.Long" resultType="map">
+    select n.node_id,case n.control_status when 0 then '已控制' when 1 then '未控制' when 2 then '控制执行中' end as control_status,n.ip_addr,case n.join_status when 0 then '接入' when 1 then '认证中' when 2 then '攻击中' end as join_status,
+    n.node_source,n.reconn_count,f.input_flow,f.out_flow,f.total_flow,f.id as flowId
+    from aw_node_info n,aw_flow_detail f
+    where n.server_id=f.serverId and n.server_id=#{serverId,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="selectAllOfManager" resultType="map">
+    select s.*,IFNULL(sum(fd.total_flow),0) as total_flow from
+    (select n.id,n.server_id,n.node_id,n.ip_addr,n.running_state,n.reconn_count,ns.currentSupport  from aw_node_info n,aw_node_server ns where n.server_id=ns.server_id) s
+    left join
+    (select node_id,(total_flow) as total_flow from aw_flow_detail) fd
+    on fd.node_id=s.node_id
+    GROUP BY s.node_id
+    ORDER BY id asc
+  </select>
+
+  <select id="selectNodeDetail" parameterType="java.lang.Long" resultType="map">
+    select f.id,f.node_id,f.exit_ip_addr,f.input_flow,f.out_flow,f.total_flow,ns.currentSupport,fs.flow_type
+    from aw_flow_detail f,aw_node_info n,aw_node_server ns,aw_flow_setting fs
+    where f.node_id=n.node_id and n.server_id=ns.server_id and n.server_id=fs.server_id and f.node_id=#{nodeId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from aw_node_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.NodeInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_node_info (id, server_id, node_id, 
+      ip_addr, node_source, reconn_count, 
+      running_state, join_status, control_status)
+    values (#{id,jdbcType=BIGINT}, #{serverId,jdbcType=BIGINT}, #{nodeId,jdbcType=VARCHAR},
+      #{ipAddr,jdbcType=VARCHAR}, #{nodeSource,jdbcType=VARCHAR}, #{reconnCount,jdbcType=INTEGER}, 
+      #{runningState,jdbcType=INTEGER}, #{joinStatus,jdbcType=INTEGER}, #{controlStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.NodeInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into aw_node_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverId != null">
+        server_id,
+      </if>
+      <if test="nodeId != null">
+        node_id,
+      </if>
+      <if test="ipAddr != null">
+        ip_addr,
+      </if>
+      <if test="nodeSource != null">
+        node_source,
+      </if>
+      <if test="reconnCount != null">
+        reconn_count,
+      </if>
+      <if test="runningState != null">
+        running_state,
+      </if>
+      <if test="joinStatus != null">
+        join_status,
+      </if>
+       <if test="controlStatus != null">
+         control_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serverId != null">
+        #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="nodeId != null">
+        #{nodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddr != null">
+        #{ipAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeSource != null">
+        #{nodeSource,jdbcType=VARCHAR},
+      </if>
+      <if test="reconnCount != null">
+        #{reconnCount,jdbcType=INTEGER},
+      </if>
+      <if test="runningState != null">
+        #{runningState,jdbcType=INTEGER},
+      </if>
+      <if test="joinStatus != null">
+        #{joinStatus,jdbcType=INTEGER},
+      </if>
+       <if test="controlStatus != null">
+        #{control_status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.NodeInfo">
+    update aw_node_info
+    <set>
+      <if test="serverId != null">
+        server_id = #{serverId,jdbcType=BIGINT},
+      </if>
+      <if test="nodeId != null">
+        node_id = #{nodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddr != null">
+        ip_addr = #{ipAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeSource != null">
+        node_source = #{nodeSource,jdbcType=VARCHAR},
+      </if>
+      <if test="reconnCount != null">
+        reconn_count = #{reconnCount,jdbcType=INTEGER},
+      </if>
+      <if test="runningState != null">
+        running_state = #{runningState,jdbcType=INTEGER},
+      </if>
+      <if test="joinStatus != null">
+        join_status = #{joinStatus,jdbcType=INTEGER},
+      </if>
+       <if test="controlStatus != null">
+         control_status = #{controlStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.NodeInfo">
+    update aw_node_info
+    set server_id = #{serverId,jdbcType=BIGINT},
+      node_id = #{nodeId,jdbcType=VARCHAR},
+      ip_addr = #{ipAddr,jdbcType=VARCHAR},
+      node_source = #{nodeSource,jdbcType=VARCHAR},
+      reconn_count = #{reconnCount,jdbcType=INTEGER},
+      running_state = #{runningState,jdbcType=INTEGER},
+      control_status = #{controlStatus,jdbcType=INTEGER},
+      join_status = #{joinStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

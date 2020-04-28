@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyfx.aw.dao.FileManagementMapper">
+  <resultMap id="BaseResultMap" type="com.wyfx.aw.entity.FileManagement">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="server_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="coding_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="type" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="file_path" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="file_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="coding_id_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, server_id, coding_id,
+      type, file_path, file_name,
+      update_time, coding_id_id
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from file_management
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectFileManagement" parameterType="com.wyfx.aw.entity.FileManagement" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from file_management
+    <where>
+      <if test="id != null">
+        id=#{id,jdbcType=INTEGER}
+      </if>
+      <if test="serverId != null">
+        and server_id=#{serverId,jdbcType=INTEGER}
+      </if>
+      <if test="codingId != null">
+       and coding_id=#{codingId,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null">
+       and type=#{type,jdbcType=INTEGER}
+      </if>
+      <if test="filePath != null">
+       and  file_path=#{filePath,jdbcType=VARCHAR}
+      </if>
+      <if test="fileName != null">
+        and file_name=#{fileName,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null">
+        and update_time=#{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="codingIdId != null">
+        and coding_id_id=#{codingIdId,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
+  <!--查询目录路径-->
+  <select id="selectFilePath" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    distinct file_path
+    from file_management
+    where coding_id_id = #{codingIdId,jdbcType=VARCHAR} and type=0
+  </select>
+
+  <!--查询目录路径-->
+  <select id="selectFilePathByID" parameterType="com.wyfx.aw.entity.FileManagement" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from file_management
+    where file_path like concat(concat("%",#{filePath,jdbcType=VARCHAR}),"%")
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from file_management
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wyfx.aw.entity.FileManagement">
+    insert into file_management (id, server_id, coding_id, 
+      type, file_path, file_name, 
+      update_time, coding_id_id)
+    values (#{id,jdbcType=INTEGER}, #{serverId,jdbcType=INTEGER}, #{codingId,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{filePath,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{codingIdId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wyfx.aw.entity.FileManagement">
+    insert into file_management
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="serverId != null">
+        server_id,
+      </if>
+      <if test="codingId != null">
+        coding_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="filePath != null">
+        file_path,
+      </if>
+      <if test="fileName != null">
+        file_name,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="codingIdId != null">
+        coding_id_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="serverId != null">
+        #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="codingId != null">
+        #{codingId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="codingIdId != null">
+        #{codingIdId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wyfx.aw.entity.FileManagement">
+    update file_management
+    <set>
+      <if test="serverId != null">
+        server_id = #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="codingId != null">
+        coding_id = #{codingId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="codingIdId != null">
+        coding_id_id = #{codingIdId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wyfx.aw.entity.FileManagement">
+    update file_management
+    set server_id = #{serverId,jdbcType=INTEGER},
+      coding_id = #{codingId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      coding_id_id = #{codingIdId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
